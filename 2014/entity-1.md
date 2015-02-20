@@ -53,7 +53,7 @@ To enable weak referencing, we use the *EntityManager* class to keep track of al
 ```cpp
 class EntityManager
 {
-	HashSet&lt;Entity> _entities;
+	HashSet<Entity> _entities;
 	Entity _next;
 
 public:
@@ -83,17 +83,17 @@ We can change this to a simple array lookup by splitting the entity ID into an *
 
 ```cpp
 const unsigned ENTITY_INDEX_BITS = 22;
-const unsigned ENTITY_INDEX_MASK = (1&lt;&lt;ENTITY_INDEX_BITS)-1;
+const unsigned ENTITY_INDEX_MASK = (1<<ENTITY_INDEX_BITS)-1;
 
 const unsigned ENTITY_GENERATION_BITS = 8;
-const unsigned ENTITY_GENERATION_MASK = (1&lt;&lt;ENTITY_GENERATION_BITS)-1;
+const unsigned ENTITY_GENERATION_MASK = (1<<ENTITY_GENERATION_BITS)-1;
 
 struct Entity
 {
 	unsigned id;
 
-	unsigned index() const {return id &amp; ENTITY_INDEX_MASK;}
-	unsigned generation() const {return (id >> ENTITY_INDEX_BITS) &amp; ENTITY_GENERATION_MASK;}
+	unsigned index() const {return id & ENTITY_INDEX_MASK;}
+	unsigned generation() const {return (id >> ENTITY_INDEX_BITS) & ENTITY_GENERATION_MASK;}
 };
 ```
 
@@ -112,8 +112,8 @@ A nice thing about only having 8 bits in *generation* is that we just need 8 bit
 ```cpp
 class EntityManager
 {
-	Array&lt;unsigned char> _generation;
-	Deque&lt;unsigned> _free_indices;
+	Array<unsigned char> _generation;
+	Deque<unsigned> _free_indices;
 
 public:
 	Entity create()
@@ -125,7 +125,7 @@ public:
 		} else {
 			_generation.push_back(0);
 			idx = _generation.size() - 1;
-			XENSURE(idx &lt; (1 &lt;&lt; ENTITY_INDEX_BITS));
+			XENSURE(idx < (1 << ENTITY_INDEX_BITS));
 		}
 		return make_entity(idx, _generation[idx]);
 	}

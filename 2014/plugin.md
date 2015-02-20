@@ -64,7 +64,7 @@ Instead of linking the plugin against a DLL that provides the engine API. We can
 
 > ```cpp
 > #include "plugin_api.h"
-> 
+>
 > __declspec(dllexport) void init(EngineApi *api);
 > __declspec(dllexport) void update(float dt);
 > __declspec(dllexport) void shutdown();
@@ -84,27 +84,27 @@ With this approach, we can also break the API up into smaller submodules that ca
 > ```cpp
 > #define WORLD_API_ID    0
 > #define LUA_API_ID      1
-> 
+>
 > typedef struct World World;
-> 
+>
 > typedef struct WorldApi_v0 {
 > 	void (*spawn_unit)(World *world, const char *name, float pos[3]);
 > 	...
 > } WorldApi_v0;
-> 
+>
 > typedef struct WorldApi_v1 {
 > 	void (*spawn_unit)(World *world, const char *name, float pos[3], float rot[4]);
 > 	...
 > } WorldApi_v1;
-> 
+>
 > typedef struct lua_State lua_State;
 > typedef int (*lua_CFunction) (lua_State *L);
-> 
+>
 > typedef struct LuaApi_v0 {
 > 	void (*add_module_function)(const char *module, const char *name, lua_CFunction f);
 > 	...
 > } LuaApi_v0;
-> 
+>
 > typedef void *(*GetApiFunction)(unsigned api, unsigned version);
 > ```
 
@@ -137,7 +137,7 @@ With this querying system in place for the engine, it makes sense to use the sam
 
 > ```cpp
 > #define PLUGIN_API_ID 2
-> 
+>
 > typedef struct PluginApi_v0
 > {
 > 	void (*init)(GetApiFunction get_engine_api);
@@ -162,17 +162,17 @@ Putting all this together, here is a complete (but very small) example of a plug
 > ```cpp
 > #define PLUGIN_API_ID       0
 > #define LUA_API_ID          1
-> 
+>
 > typedef void *(*GetApiFunction)(unsigned api, unsigned version);
-> 
+>
 > typedef struct PluginApi_v0
 > {
 > 	void (*init)(GetApiFunction get_engine_api);
 > } PluginApi_v0;
-> 
+>
 > typedef struct lua_State lua_State;
 > typedef int (*lua_CFunction) (lua_State *L);
-> 
+>
 > typedef struct LuaApi_v0
 > {
 > 	void (*add_module_function)(const char *module, const char *name, lua_CFunction f);
@@ -185,9 +185,9 @@ Putting all this together, here is a complete (but very small) example of a plug
 
 > ```cpp
 > #include "plugin_api.h"
-> 
+>
 > LuaApi_v0 *_lua;
-> 
+>
 > static int test(lua_State *L)
 > {
 > 	double a = _lua->to_number(L, 1);
@@ -195,21 +195,21 @@ Putting all this together, here is a complete (but very small) example of a plug
 > 	_lua->push_number(L, a+b);
 > 	return 1;
 > }
-> 
+>
 > static void init(GetApiFunction get_engine_api)
 > {
 > 	_lua = get_engine_api(LUA_API_ID, 0);
-> 
+>
 > 	if (_lua)
 > 		_lua->add_module_function("Plugin", "test", test);
 > }
-> 
+>
 > __declspec(dllexport) void *get_plugin_api(unsigned api, unsigned version)
 > {
-> 	if (api == PLUGIN_API_ID &amp;&amp; version == 0) {
+> 	if (api == PLUGIN_API_ID && version == 0) {
 > 		static PluginApi_v0 api;
 > 		api.init = init;
-> 		return &amp;api;
+> 		return &api;
 > 	}
 > 	return 0;
 > }
@@ -220,24 +220,24 @@ Putting all this together, here is a complete (but very small) example of a plug
 > ```cpp
 > // Initialized elsewhere.
 > LuaEnvironment *_env = 0;
-> 
+>
 > void add_module_function(const char *module, const char *name, lua_CFunction f)
 > {
 > 	_env->add_module_function(module, name, f);
 > }
-> 
+>
 > void *get_engine_api(unsigned api, unsigned version)
 > {
-> 	if (api == LUA_API_ID &amp;&amp; version == 0 &amp;&amp; _env) {
+> 	if (api == LUA_API_ID && version == 0 && _env) {
 > 		static LuaApi_v0 lua;
 > 		lua.add_module_function = add_module_function;
 > 		lua.to_number = lua_tonumber;
 > 		lua.push_number = lua_pushnumber;
-> 		return &amp;lua;
+> 		return &lua;
 > 	}
 > 	return 0;
 > }
-> 
+>
 > void load_plugin(const char *path)
 > {
 > 	HMODULE plugin_module = LoadLibrary(path);

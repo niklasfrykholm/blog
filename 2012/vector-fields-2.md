@@ -19,7 +19,7 @@ Vector3(sin(p.x), sin(p.y), 0);
 we can just type it up:
 
 ```
-inline Vector3 f(const Vector3 &amp;p)
+inline Vector3 f(const Vector3 &p)
 {
 	return vector3(sin(p.x), sin(p.y), 0);
 }
@@ -29,7 +29,7 @@ But if we don't know beforehand what *G(p)* will be we don't have that option.
 
 We could write our system so that it supported a limited set of specific effects, with hardcoded C++ implementations. For example, there could be an "explosion" effect with some parameters (radius, strength, etc), an "updraft" effect, a "whirl" effect, etc. Similarly we could have support for a variety of standard shapes, such as "sphere", "cylinder", "capsule", etc. And perhaps some different types of falloffs ("linear", "quadratic"). Perhaps also some temporal effects ("attack-sustain-release", "ease-in-ease-out").
 
-But it is hard to know where to draw the limit with this approach. Exactly what effects and shapes and falloffs and time curves should the system support? The more things we add, the more cluttered the system becomes. And the system is still not completely general. No matter how much we add, there will still be some things that the user just *can't* do, without disturbing a programmer and get her to add a new effect to the system. This means that the system is not *truly* data-driven. 
+But it is hard to know where to draw the limit with this approach. Exactly what effects and shapes and falloffs and time curves should the system support? The more things we add, the more cluttered the system becomes. And the system is still not completely general. No matter how much we add, there will still be some things that the user just *can't* do, without disturbing a programmer and get her to add a new effect to the system. This means that the system is not *truly* data-driven.
 
 Whether this is a problem or not depends a lot on your development style. If you are a single artist-programmer working on a single game you may not even care. To you code and data is the same thing. Who cares if you have to add something to the code to make a special effect. That is what the code is for.
 
@@ -147,6 +147,6 @@ void run_vm(const void *bytecode, unsigned n, Vector4I **registers)
 
 ## An Example
 
-Here is a [YouTube video](http://www.youtube.com/watch?v=HkYvvEUXhcw&amp;feature=g-upl) that shows a vector field implemented using this method. Unfortunately, the YouTube compression is not very nice to a video that contains this much high-frequency information. But at least it gives some idea of the effect.
+Here is a [YouTube video](http://www.youtube.com/watch?v=HkYvvEUXhcw&feature=g-upl) that shows a vector field implemented using this method. Unfortunately, the YouTube compression is not very nice to a video that contains this much high-frequency information. But at least it gives some idea of the effect.
 
 The video shows 20 000 particles being animated by the vector field at a query cost of about 0.4 ms on a single thread (of course, parallelization is trivial, so you can divide that by the number of available cores).

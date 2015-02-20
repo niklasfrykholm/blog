@@ -79,8 +79,8 @@ public:
     virtual InstanceId play(SoundResource *sound) = 0;
     virtual void stop(InstanceId id) = 0;
 
-    static SoundWorld *make(Allocator &amp;a);
-    static void destroy(Allocator &amp;a, SoundWorld *sw);
+    static SoundWorld *make(Allocator &a);
+    static void destroy(Allocator &a, SoundWorld *sw);
 };
 ```
 
@@ -101,25 +101,25 @@ class SoundWorldImplementation : public SoundWorld
         ...
     }
 
-    virtual InstanceId play(SoundResource *sound) 
+    virtual InstanceId play(SoundResource *sound)
     {
         ...
     }
 
-    virtual void stop(InstanceId) 
+    virtual void stop(InstanceId)
     {
         ...
     }
 };
 
-SoundWorld *SoundWorld::make(Allocator &amp;a)
+SoundWorld *SoundWorld::make(Allocator &a)
 {
-    return a.make&lt;SoundWorldImplementation>();
+    return a.make<SoundWorldImplementation>();
 }
 
-SoundWorld *SoundWorld::destroy(Allocator &amp;a, SoundWorld *sw)
+SoundWorld *SoundWorld::destroy(Allocator &a, SoundWorld *sw)
 {
-    return a.destroy&lt;SoundWorldImplementation>(sw);
+    return a.destroy<SoundWorldImplementation>(sw);
 }
 ```
 
@@ -137,7 +137,7 @@ I don't make much use of implementation inheritance. In my opinion, it is almost
 The performance issue of virtual calls is not a huge issue, since I only use this for "big" objects (*Systems* and *Managers*). Also, I design the API so that the number of API calls is minimized. I.e., instead of a function:
 
 ```cpp
-void set_sound_position(InstanceId id, const Vector3 &amp;pos);
+void set_sound_position(InstanceId id, const Vector3 &pos);
 ```
 
 I have:

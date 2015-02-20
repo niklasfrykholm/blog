@@ -11,7 +11,7 @@ The naive algorithm for finding these coinciding vertices is to just do a double
 ```
 foreach (v1 in vertices)
    foreach (v2 in vertices)
-      if (distance(v1, v2) &lt; tolerance)
+      if (distance(v1, v2) < tolerance)
          ...
 ```
 
@@ -55,7 +55,7 @@ struct GridCoordinate {
    int y;
 };
 
-HashMap&lt;GridCoordinate, CellData> grid;
+HashMap<GridCoordinate, CellData> grid;
 
 // To insert an item
 GridCoordinate gc;
@@ -88,7 +88,7 @@ If the data is sparse compared to the search radius you can use a bigger cell si
 The final piece of this puzzle is what *CellData* should look like. It might be tempting to do something like:
 
 ```cpp
-typedef Vector&lt;VertexId> CellData;
+typedef Vector<VertexId> CellData;
 ```
 
 However, this would be highly inefficient. In many cases cells will only contain a few items and allocating a Vector for them is total overkill. Using a Vector will mean tons of pointer chasing, cache misses and data copying.
@@ -100,9 +100,9 @@ So what can you do instead. If you have a good *MultiHashMap* implementation, yo
 ```cpp
 struct CellData {
    VertexId id;
-   unsigned next; 
+   unsigned next;
 };
-Array&lt;CellData> items;
+Array<CellData> items;
 ```
 
 Here, *items* contains linked lists of the items in each cell, stored in a continuous array (which is the only sane way to store linked lists). The *HashMap* gives the first cell item. Then you follow the *next* references in the *items* list to find subsequent items in the same cell until *next == UINT_MAX*, which marks the end of the list.

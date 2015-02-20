@@ -12,7 +12,7 @@ The foundation library implements the idea of separating data definitions and fu
 
 Data is stored in structs with public members (prefixed with an underscore to indicate that you should not mess with them unless you know what you are doing) that are found in **_types.h* files. Functions that operate on the data are written outside of the struct, in separate **.h* files (and organized into namespaces).
 
-For example, the data definition for the dynamic *Array&lt;T>* class is found in *collection_types.h:*
+For example, the data definition for the dynamic *Array<T>* class is found in *collection_types.h:*
 
 ```cpp
 template<typename T> struct Array
@@ -32,7 +32,7 @@ template<typename T> struct Array
 };
 ```
 
-The struct contains only the data used by the array and the operators which C++ forces us to implement as member functions. 
+The struct contains only the data used by the array and the operators which C++ forces us to implement as member functions.
 
 The implementation of these functions, as well as the declaration and definition of all other functions that operate on the arrays are found in the *array.h* file. It contains things like:
 
@@ -66,17 +66,17 @@ Headers including other headers indiscriminately because they need their types i
 
 Second, and more importantly, this design allows the collection types to be freely extended. Is there anything you miss in the *array* interface? Perhaps you would like *shift()* and *unshift()* methods? Or *binary_search()?*
 
-No problem. If you want them you can just add them, and you don't even need to modify *array.h*. Just create your own file *array_extensions.h* or whatever, and add some new functions to the *array* namespace, that manipulate the data in the *Array&lt;T>* interface. The functions you create will be just as good as the functions I have created.
+No problem. If you want them you can just add them, and you don't even need to modify *array.h*. Just create your own file *array_extensions.h* or whatever, and add some new functions to the *array* namespace, that manipulate the data in the *Array<T>* interface. The functions you create will be just as good as the functions I have created.
 
 Note that this isn't true for traditional class designs, where you have first-class citizens (methods) and second-class citizens (external functions).
 
-The foundation library has some interesting examples of this. For example, the *string_stream* functions don't operate on any special *StringStream* class, they just directly use an *Array&lt;char>*. Also, the *hash* and *multi_hash* interfaces both work on the same underlying *Hash&lt;T>* struct.
+The foundation library has some interesting examples of this. For example, the *string_stream* functions don't operate on any special *StringStream* class, they just directly use an *Array<char>*. Also, the *hash* and *multi_hash* interfaces both work on the same underlying *Hash<T>* struct.
 
 I believe that this design leads to simpler, more orthogonal code that is easier to extend and reuse.
 
 ## Memory management
 
-The library implements the allocator system mentioned in [this article](http://bitsquid.blogspot.se/2010/09/custom-memory-allocation-in-c.html). There is an abstract *Allocator* interface, and implementations of that interface can provide different allocation strategies (e.g. ArenaAllocator, HeapAllocator, SlotAllocator, etc). 
+The library implements the allocator system mentioned in [this article](http://bitsquid.blogspot.se/2010/09/custom-memory-allocation-in-c.html). There is an abstract *Allocator* interface, and implementations of that interface can provide different allocation strategies (e.g. ArenaAllocator, HeapAllocator, SlotAllocator, etc).
 
 Since I want to keep the library platform independent, I haven't implemented a *PageAllocator*. Instead, the *MallocAllocator* is used as the lowest allocator level. If you want to, you can easily add a *PageAllocator* for your target platform.
 
@@ -96,18 +96,18 @@ If the scratch buffer is exhausted (the *allocate* pointer wraps around and catc
 
 If you forget to free something allocated with the *ScratchAllocator*, or if you accidentally mix in a long-lived allocation among the short-lived ones, that allocation will block the *free* pointer from advancing, which will eventually exhaust your scratch buffer, so keep an eye out for such situations.
 
-*TempAllocator&lt;BYTES>* is a scoped allocator that automatically frees all its allocated memory when it is destroyed (meaning you don't have to explicitly call *deallocate()*, you can just let the allocator fall out of scope). This means you can use it everywhere where you need a little extra memory in a function scope:
+*TempAllocator<BYTES>* is a scoped allocator that automatically frees all its allocated memory when it is destroyed (meaning you don't have to explicitly call *deallocate()*, you can just let the allocator fall out of scope). This means you can use it everywhere where you need a little extra memory in a function scope:
 
 ```cpp
 void test()
 {
      TempAllocator1024 ta;
-     Array&lt;char> message(ta);
+     Array<char> message(ta);
      ...
 }
 ```
 
-The *BYTES* argument to *TempAllocator&lt;BYTES>* specifies how much stack space the allocator should reserve. The *TempAllocator* contains *char buffer[BYTES]* that gets allocated on the stack together with the *TempAllocator*.
+The *BYTES* argument to *TempAllocator<BYTES>* specifies how much stack space the allocator should reserve. The *TempAllocator* contains *char buffer[BYTES]* that gets allocated on the stack together with the *TempAllocator*.
 
 Allocation requests are first serviced from the stack buffer, then (if the stack buffer is exhausted) from the *ScratchAllocator*.
 
@@ -127,7 +127,7 @@ This simplifies the code and improves the performance (calling constructors and 
 
 Personally I like this minimalistic approach. If I want to keep non-POD data in a collection, I prefer to store it as pointers anyway, so I have control over when and how the data is constructed and destroyed. I don't like those things happening "behind my back". You may disagree of course, but in that case you are probably happy to use STL (or boost).
 
-Another example of choosing minimalism is the *Hash&lt;T>* class. The hash uses a fixed key type which is a *uint64_t*. If you want to use a key that doesn't fit into 64 bits, you have to hash it yourself before using it to access the data.
+Another example of choosing minimalism is the *Hash<T>* class. The hash uses a fixed key type which is a *uint64_t*. If you want to use a key that doesn't fit into 64 bits, you have to hash it yourself before using it to access the data.
 
 ### And more?
 

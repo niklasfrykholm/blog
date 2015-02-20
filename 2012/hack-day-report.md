@@ -14,7 +14,7 @@ Different companies seem to take different approaches to hack days. At some plac
 
 * We avoided Skype, email and meetings during the day, so that wd could focus 100 % on the projects.
 
-* A couple of days after the events we had a small show &amp; tell, where everybody could present what they had learned.
+* A couple of days after the events we had a small show & tell, where everybody could present what they had learned.
 
 ## Results
 
@@ -80,7 +80,7 @@ Of course, we can't *actually* do that. Raycasts are comparatively expensive and
 
 To control the performance, I exposed a parameter that lets the effect designer control how many raycasts per frame an effect is a allowed to make. A typical value of 1.0 means that every frame, one particle in the effect is picked at random, a raycast is performed along that particles trajectory and its collision plane is updated with the result.
 
-Note that with this solution, the work is always evenly distributed over the duration of the effect. That is a lot nicer than what you typically get with the "world slice" approach where there is a big chunk of work in the beginning when you cut out the world slice and process it to something simpler. 
+Note that with this solution, the work is always evenly distributed over the duration of the effect. That is a lot nicer than what you typically get with the "world slice" approach where there is a big chunk of work in the beginning when you cut out the world slice and process it to something simpler.
 
 Astute readers will have noticed a fatal flaw with the design as it has been presented so far: it can't possibly work for very many particles. If we have an effect with 1 000 particles and do a raycast every frame, it will take 33 seconds before every particle has found its collision normal. By then, they will long since have fallen through the floor.
 
@@ -111,7 +111,7 @@ To quantize the direction we can use a similar approach. I decided to quantize t
 
 ```cpp
 unsigned id;
-if (fabsf(dir.x) >= fabsf(dir.y) &amp;&amp; fabsf(dir.x) >= fabsf(dir.z))
+if (fabsf(dir.x) >= fabsf(dir.y) && fabsf(dir.x) >= fabsf(dir.z))
 	id = dir.x > 0 ? 0 : 1;
 else if (fabsf(dir.y) >= fabsf(dir.z))
 	id = dir.y > 0 ? 2 : 3;
@@ -127,10 +127,10 @@ struct CollisionPlane {
 	Vector3 normal;
 	float offset;
 };
-HashMap&lt;uint64, CollisionPlane> _cache;
+HashMap<uint64, CollisionPlane> _cache;
 ```
 
-(Side note: Unless I'm worried about hash function collisions, I prefer to hash my keys *before* I insert them in the *HashMap* and just use a `HashMap&lt;uint64,T>` instead of `HashMap&lt;MyComplicatedKeyStruct,T>`. That way the hash map uses less memory and lookups can be done with a simple modulo operation.)
+(Side note: Unless I'm worried about hash function collisions, I prefer to hash my keys *before* I insert them in the *HashMap* and just use a `HashMap<uint64,T>` instead of `HashMap<MyComplicatedKeyStruct,T>`. That way the hash map uses less memory and lookups can be done with a simple modulo operation.)
 
 Whenever I do a particle raycast I store the result in the cache. When particles are spawned they lookup their collision plane in the cache. Particles also query the cache every time they bounce, since that typically means they will be traveling in a new direction.
 

@@ -25,8 +25,8 @@ struct Vector3 {
 	float x, y, z;
 };
 
-template &lt;class T>
-class Array&lt;T> {
+template <class T>
+class Array<T> {
 public:
 	Array() : _capacity(0), _size(0), _data(0) {}
 	~Array() {free(_data);}
@@ -48,7 +48,7 @@ Since it contains all type definitions, it is usually the only file that needs t
 We put the function declarations (along with any inline code) in the usual header files. So *vector3.h* would have things like:
 
 ```cpp
-inline Vector3 operator+(const Vector3 &amp;a, const Vector3 &amp;b)
+inline Vector3 operator+(const Vector3 &a, const Vector3 &b)
 {
 	Vector3 res;
 	res.x = a.x + b.x;
@@ -63,8 +63,8 @@ inline Vector3 operator+(const Vector3 &amp;a, const Vector3 &amp;b)
 Similarly, *array.h* would contain thinks like:
 
 ```cpp
-template &lt;class T>
-void push_back(Array&lt;T> &amp;a, const T &amp;item)
+template <class T>
+void push_back(Array<T> &a, const T &item)
 {
 	if (a._size + 1 > a._capacity)
 		grow(a);
@@ -72,7 +72,7 @@ void push_back(Array&lt;T> &amp;a, const T &amp;item)
 }
 ```
 
-Note that *types.h* only contains the constructor and the destructor for *Array&lt;T>*, not any other member functions.
+Note that *types.h* only contains the constructor and the destructor for *Array<T>*, not any other member functions.
 
 Furthermore, I prefer to design classes so that the "zero-state" where all members are zeroed is always a valid empty state for the class. That way, the constructor becomes trivial, it just needs to zero all member variables. We can also construct arrays of objects with a simple *memset()*.
 

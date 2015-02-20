@@ -8,7 +8,7 @@ Quick recap of what has happened so far:
 
 * I represent these functions in bytecode format, as a piece of bytecode that given an input position *p* computes a vector field strength *F_i*.
 
-* By running each step of the virtual machine over a thousands of input points, the cost of decoding and interpreting the bytecode instructions is amortized over all those points. 
+* By running each step of the virtual machine over a thousands of input points, the cost of decoding and interpreting the bytecode instructions is amortized over all those points.
 
 * This means that we get the bytecode decoding "for free" -- the bytecode can run at nearly native speed.
 
@@ -21,7 +21,7 @@ Lucky for us, we don't care about either of these things. *Compactness* doesn't 
 When it doesn't really matter I always pick the simplest thing I can think of. In this case it is something like:
 
 ```
-(instruction) (result) (argument-1) (argument-2) 
+(instruction) (result) (argument-1) (argument-2)
 ```
 
 Here, *instruction* is a 4-byte instruction identifier. *result* is a 4-byte channel identifier that tells us which channel the result should be written to. *argument-1* and *argument-2* are either channel identifiers or Vector4's with constant arguments. (Instructions of higher arity would have more arguments.)
@@ -104,7 +104,7 @@ Instead I tend to use a [recursive descent parser](http://en.wikipedia.org/wiki/
 
 For this language I parse the overall structure with recursive descent, and then use Dijkstra's algorithm to process each statement in the function body.
 
-I generate the bytecode directly from the shunting yard algorithm. When I pop an operator from the operator stack I generate the bytecode for computing that operator and storing the result in a temporary register. I then push that register to the value stack so that the result can be used in other computations. Temporary channels are recycled after they are popped of the value stack to minimize the channel count. 
+I generate the bytecode directly from the shunting yard algorithm. When I pop an operator from the operator stack I generate the bytecode for computing that operator and storing the result in a temporary register. I then push that register to the value stack so that the result can be used in other computations. Temporary channels are recycled after they are popped of the value stack to minimize the channel count.
 
 ## Constant patching
 
@@ -133,7 +133,7 @@ I could reduce the instruction count somewhat and improve performance by doing a
 In my physics system I maintain a list of all awake (non-sleeping) actors. I apply wind from a vector field with an explicit call:
 
 ```cpp
-void apply_wind(const VectorField &amp;field, const CollisionFilter &amp;filter);
+void apply_wind(const VectorField &field, const CollisionFilter &filter);
 ```
 
 This extracts the position of every awake actor that matches the collision filter and sends that list to the vector field for evaluation. It then does a second loop through the actors to apply wind forces from the returned wind velocities.
@@ -141,7 +141,7 @@ This extracts the position of every awake actor that matches the collision filte
 I've chosen to have an explicit step for applying wind, so that you don't have to pay anything for the wind support unless you actually use it. Having an explicit step also opens up the possibility to have other types of vector fields. For example, there could be a vector field representing gravity forces and a corresponding function:
 
 ```cpp
-void apply_acceleration(const VectorField &amp;field, const CollisionFilter &amp;filter);
+void apply_acceleration(const VectorField &field, const CollisionFilter &filter);
 ```
 
 The fact that the wind is only applied to *awake* actors is important. Without that check, the wind forces would keep every actor in the world awake all the time, which would be really expensive for the physics engine. Just as with gravity, we want physics objects to come to rest and go to "sleep" when the wind forces are in balance with other forces on the actor.
@@ -153,7 +153,7 @@ This problem is most noticeable when you have drastic effects like explosions in
 I deal with this by having a function for explicitly waking actors in an AABB:
 
 ```cpp
-wake_actors(const Vector3 &amp;min, const Vector3 &amp;max, const CollisionFilter &amp;filter)
+wake_actors(const Vector3 &min, const Vector3 &max, const CollisionFilter &filter)
 ```
 
 If you want to play a drastic wind effect (like an explosion), you should first wake the nearby actors with a call to *wake_actors()*. This ensures that all nearby actors will get the wind forces from the explosion (since they are now awake).

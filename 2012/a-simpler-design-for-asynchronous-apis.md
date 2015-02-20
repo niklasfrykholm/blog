@@ -58,10 +58,10 @@ if (request->is_done()) {
 Or perhaps, using the C++11 concepts of promises and futures (I have only a passing acquaintance with C++11, so forgive me if I mess something up):
 
 ```cpp
-std::promise&lt;bool> *promise = new std::promise&lt;bool>();
+std::promise<bool> *promise = new std::promise<bool>();
 _leaderboard->set_score(100, promise);
 ...
-std::future&lt;bool> future = promise->get_future();
+std::future<bool> future = promise->get_future();
 if (future.valid()) {
 	bool success = future.get();
 	_leaderboard->forget_promise(promise);
@@ -120,7 +120,7 @@ SetScoreResult set_score_result(unsigned id)
 }
 ```
 
-This means that you can only ask about the result of the last 64 operations. On the other hand, this solution uses very little memory, does not allocate anything, has very quick lookups and doesn't require the user to explicitly free tokens. 
+This means that you can only ask about the result of the last 64 operations. On the other hand, this solution uses very little memory, does not allocate anything, has very quick lookups and doesn't require the user to explicitly free tokens.
 
 To me, this added simpleness and flexibility outweighs the disadvantage of having a limit on the maximum number of in flight operations that we support.
 

@@ -11,7 +11,7 @@ Drifting happens because in a Matrix4x4 the rotation and the scale are stored to
 This means that if we want to change the rotation of a Matrix4x4 without affecting the scale we must extract the scale and reapply it:
 
 ```cpp
-void set_rotation(Matrix4x4 &amp;pose, const Quaternion &amp;rot)
+void set_rotation(Matrix4x4 &pose, const Quaternion &rot)
 {
      Vector3 s = scale(pose);
      Matrix3x3 rotm = matrix3x3(rot);
@@ -95,7 +95,7 @@ The fundamental problem with *set_rotation()* is that we try to change just the 
 If we don't allow the user to just change the rotation, but force him to always set the scale and the rotation together, the problem disappears:
 
 ```cpp
-void set_rotation_and_scale(Matrix4x4 &amp;pose, const Quaternion &amp;rot, const Vector3 &amp;s)
+void set_rotation_and_scale(Matrix4x4 &pose, const Quaternion &rot, const Vector3 &s)
 {
     Matrix3x3 rotm = matrix3x3(rot);
     scale(rotm, s);
@@ -120,7 +120,7 @@ What we have done is essentially to move the burden of keeping track of the scal
 
 If none of the two options presented so far seem palpable to you, there is actually a third possibility.
 
-Consider what would happen if we changed the *Vector3 scale(const Matrix4x4 &amp;)* function so that it always returned integer values.
+Consider what would happen if we changed the *Vector3 scale(const Matrix4x4 &)* function so that it always returned integer values.
 
 Calling *set_rotation()* as before would introduce an error to the scale and set it to, say 1.0000001. But the next time we ran *set_rotation()* and asked for the scale it would be rounded to the nearest integer value, so it would be returned as 1 -- the correct value. Applying the new rotation would again introduce an error and change the value to 1.0000001, but then again, the next time the function ran, the value returned would be snapped back to 1.
 

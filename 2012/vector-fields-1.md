@@ -38,7 +38,7 @@ F(p, t) = Vector3(sin(t), 0, 0) + sample_grid(grid, p)
 
 The vector field function *F(p, t)* is a function of both space *and* time. The wind varies throughout the level and if we look at any one point, the wind at that point varies over time.
 
-But in practice, we treat the *p* and *t* coordinates very differently. We start at some time *t_0* and then evaluate *F(p, t_0)* for thousands of different *p* values. Then we move on to *t_1* and do the same thing. 
+But in practice, we treat the *p* and *t* coordinates very differently. We start at some time *t_0* and then evaluate *F(p, t_0)* for thousands of different *p* values. Then we move on to *t_1* and do the same thing.
 
 We can make use of the fact that *t* remains constant for a large number of evaluations to simplify the function. For example at *t=0.5* the function:
 
@@ -84,7 +84,7 @@ An explosion effect could create a wind with a speed of 100 m/s outwards from th
 G_2(p) = sphere(p,c,4) * normalize(p-c) * 100
 ```
 
-Here *sphere(p,c,4)* is a spherical support function that defines the range of the effect. It is *1* if *||p - c|| &lt;= 4.0* and *0* otherwise.
+Here *sphere(p,c,4)* is a spherical support function that defines the range of the effect. It is *1* if *||p - c|| <= 4.0* and *0* otherwise.
 
 Note again that we have stripped out the time component. At the higher level, this might be an expanding sphere with decreasing wind speeds, but at the low level we only care what it looks like at this instance.
 
