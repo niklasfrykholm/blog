@@ -29,3 +29,10 @@ Shows how to create a content pipeline with sub-second iteration times.
 Engine philosophy and challenges.
 
 * [PDF](https://www.dropbox.com/s/5sfw683akp1lwyk/bitsquid-behind-the-scenes.pdf?dl=0)
+
+## Flow (Stockholm Game Developer Forum 2011)
+
+* [Keynote](https://www.dropbox.com/s/k3wt7g80r8q8tw9/flow.key?dl=0)
+* [PDF](https://www.dropbox.com/s/z7sff8wexm5fzkt/flow.pdf?dl=0)
+* [PDF with speaker notes](https://www.dropbox.com/s/7u0rajjrqacy6fz/flow-notes.pdf?dl=0)
+
