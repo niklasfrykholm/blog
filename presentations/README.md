@@ -2,6 +2,11 @@
 
 To keep the size of this archive down, the presentations are stored in a separate [Dropbox folder](https://www.dropbox.com/sh/92vvtwgxyfh1bj7/AACfOtWPsV0wRLyK-ujDiOBra?dl=0).
 
+## Lua in the Stingray Game Engine (Lua Workshop 2015)
+
+* [Online](http://www.frykholm.se/presentations/lua-workshop-2015/index.html)
+* [Zipped](http://www.frykholm.se/presentations/lua-workshop-2015.zip)
+
 ## Scripting Particles (GDC 2014)
 
 Shows a method of scripting particle systems with performance close to native code. 
