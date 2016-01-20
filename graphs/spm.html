@@ -1,0 +1,26 @@
+<html>
+<head>
+  <style>body {background-color: #eee;}</style>
+</head>
+<body>
+  <script src="lib.js"></script>
+
+  <canvas id="spm" width="800" height="260"/>
+
+  <script>
+      var canvas = document.getElementById("spm");
+      var ctx = canvas.getContext("2d");
+      ctx.fillStyle = "#fff";
+      ctx.fillRect(0,0,10000,10000);
+      var rep = draw.textbox(ctx, "Artifact Repository", 10, 10);
+      var lib = draw.textbox(ctx, "Library Folder", 10, 200);
+      var cache = draw.textbox(ctx, "Cache", 800-200-10, 200);
+
+      draw.arrow(ctx, rep.center,rep.bottom,lib.center,lib.top);
+      draw.arrow(ctx, lib.right, lib.middle, cache.left, cache.middle, true);
+
+      ctx.fillText("Download specific artifact version", 140, 130)
+      ctx.fillText("Cache store/retrieve", 320, 200);
+  </script>
+</body>
+</html>
