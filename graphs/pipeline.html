@@ -14,7 +14,7 @@
       ctx.fillRect(0,0,10000,10000);
 
       var spacing = 120;
-      var trans = new Rect(50, 50, 200, 50);
+      var trans = new Rect({x: 50, y: 50, w: 200, h: 50});
       var disk = trans.offset(0, spacing);
       var compiled = disk.offset(0, spacing);
       var loaded = compiled.offset(0, spacing);

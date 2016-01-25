@@ -1,18 +1,33 @@
 class Point
 {
-    constructor(x, y) {
-        this.x = x;
-        this.y = y;
+    constructor(opt) {
+        this.x = opt.x || opt.left || 0;
+        this.y = opt.y || opt.top || 0;
     }
+    get left() {return this.x;}
+    get top() {return this.y;}
 }
 
 class Rect
 {
-    constructor(x,y,w,h) {
-        this.x = x;
-        this.y = y;
-        this.w = w;
-        this.h = h;
+    constructor(opt) {
+        if (opt.w || opt.width) {this.w = opt.w || opt.width;}
+        else if (opt.left && opt.right) {this.w = opt.right - opt.left;}
+        else {opt.w = 100.0;}
+
+        if (opt.x || opt.left) {this.x = opt.x || opt.left;}
+        else if (opt.center) {this.x = opt.center - this.w/2;}
+        else if (opt.right) {this.x = opt.right - this.w;}
+        else {opt.x = 0.0;}
+
+        if (opt.h || opt.height) {this.h = opt.h || opt.height;}
+        else if (opt.top && opt.bottom) {this.h = opt.bottom - opt.top;}
+        else {opt.h = 100.0;}
+
+        if (opt.y || opt.top) {this.y = opt.y || opt.top;}
+        else if (opt.middle) {this.y = opt.middle - this.h/2;}
+        else if (opt.bottom) {this.y = opt.bottom - this.h;}
+        else {opt.y = 0.0;}
     }
 
     get left() {return this.x;}
@@ -23,10 +38,19 @@ class Rect
     get middle() {return this.y + this.h/2;}
     get bottom() {return this.y + this.h;}
 
-    get bottomCenter() {return new Point(this.center, this.bottom);}
-    get topCenter() {return new Point(this.center, this.top);}
+    get topLeft()   {return new Point({x: this.left,   y: this.top});}
+    get topCenter() {return new Point({x: this.center, y: this.top});}
+    get topRight()  {return new Point({x: this.right,  y: this.top});}
 
-    offset(x,y) {return new Rect(this.x+x, this.y+y, this.w, this.h);}
+    get middleLeft()   {return new Point({x: this.left,   y: this.middle});}
+    get middleCenter() {return new Point({x: this.center, y: this.middle});}
+    get middleRight()  {return new Point({x: this.right,  y: this.middle});}
+
+    get bottomLeft()   {return new Point({x: this.left,   y: this.bottom});}
+    get bottomCenter() {return new Point({x: this.center, y: this.bottom});}
+    get bottomRight()  {return new Point({x: this.right,  y: this.bottom});}
+
+    offset(x,y) {return new Rect({x: this.x+x, y: this.y+y, w: this.w, h: this.h});}
 }
 
 var draw = {
@@ -64,6 +88,6 @@ var draw = {
 
     ctx.stroke();
 
-    return new Rect(p1.x, p1.y, p2.x - p1.x, p2.y - p1.y);
+    return new Rect({left: p1.x, top: p1.y, right: p2.x, bottom: p2.y});
   }
 };
