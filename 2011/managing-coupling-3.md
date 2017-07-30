@@ -1,5 +1,3 @@
-* TODO(nf) This document has images that are missing from the blogspot site. Find out where they went.
-
 # Managing Decoupling Part 3 - C++ Duck Typing
 
 Some systems need to manipulate objects whose exact nature are not known. For example, a particle system has to manipulate particles that sometimes have mass, sometimes a full 3D rotation, sometimes only 2D rotation, etc. (A *good* particle system anyway, a bad particle system could use the same struct for all particles in all effects. And the struct could have some fields called `custom_1`, `custom_2` used for different purposes in different effects. And it would be both inefficient, inflexible and messy.)
@@ -65,7 +63,7 @@ But there are a number of drawbacks with this approach. It is quite verbose. The
 
 So I prefer something much simpler. A generic object is just a type enum followed by the data for the object:
 
-==Missing Image==
+![generic object](managing-decoupling-3-1.png)
 
 To pass the object you just pass its pointer. To make a copy, you make a copy of the memory block. You can also write it straight to disk and read it back, send it over network or to an SPU for off-core processing.
 
@@ -81,17 +79,17 @@ You don’t really need that many different object types: *bool*, *int*, *float*
 
 For a dictionary object we just store the name/key and type of each object:
 
-== Missing Image ==
+![dictionary object](managing-decoupling-3-2.png)
 
 I tend to use a four byte value for the name/key and not care if it is an integer, float or a 32-bit string hash. As long as the data is queried with the same key that it was stored with, the right value will be returned. I only use this method for small structs, so the probability for a hash collision is close to zero and can be handled by “manual resolution”.
 
 If we have many objects with the same “dictionary type” (i.e. the same set of fields, just different values) it makes sense to break out the definition of the type from the data itself to save space:
 
-== Missing image ==
+![multiple objects](managing-decoupling-3-3.png)
 
 Here the `offset` field stores the offset of each field in the data block. Now we can efficiently store an array of such data objects with just one copy of the dictionary type information:
 
-== Missing image ==
+![data array](managing-decoupling-3-4.png)
 
 Note that the storage space (and thereby the cache and memory performance) is exactly the same as if we were using an array of regular C structs, even though we are using a completely open free form JSON-like struct. And extracting or changing data just requires a little pointer arithmetic and a cast.
 
